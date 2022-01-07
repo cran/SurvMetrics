@@ -118,6 +118,7 @@ IBS <- function(object,sp_matrix,IBSrange = range(object[,1])){
     for (i in 1:(length(IBSrange)-1)) {
       t_IBS = t_IBS + (IBSrange[i+1] - IBSrange[i])*t_brier[i]
     }
+    t_IBS = t_IBS/(range(IBSrange)[2] - range(IBSrange)[1])
     names(t_IBS) = 'IBS'
     return(t_IBS)
   }else {

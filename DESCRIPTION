@@ -1,8 +1,8 @@
 Package: SurvMetrics
 Type: Package
 Title: Predictive Evaluation Metrics in Survival Analysis
-Version: 0.3.5
-Date: 2021-08-07
+Version: 0.4.0
+Date: 2022-01-01
 Authors@R: c(
               person("Hanpu", "Zhou", role = c("aut", "cre"), email = "zhouhanpu@csu.edu.cn"),
               person("Xuewei", "Cheng", role = c("aut"), email = "xwcheng@csu.edu.cn"),
@@ -31,7 +31,7 @@ Suggests: knitr, rmarkdown, randomForestSRC, caret, ggplot2, ggpubr,
 NeedsCompilation: no
 URL: https://github.com/skyee1/SurvMetrics
 BugReports: https://github.com/skyee1/SurvMetrics/issues
-Packaged: 2021-08-10 08:44:00 UTC; Lenovo-yi
+Packaged: 2022-01-07 01:44:03 UTC; Lenovo-yi
 VignetteBuilder: knitr
 Repository: CRAN
-Date/Publication: 2021-08-10 12:20:05 UTC
+Date/Publication: 2022-01-07 12:12:48 UTC

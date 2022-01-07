@@ -28,4 +28,13 @@ Modify the DESCRIPTION content according to the CRAN maintainer's suggestion.
 
 Modify README.md.
 
-Reduce the running time of the Eaxmples
+Reduce the running time of the Examples
+
+
+# SurvMetrics 0.4.0
+
+A new evaluation index is added:concordance index for competing risk
+
+
+
+
