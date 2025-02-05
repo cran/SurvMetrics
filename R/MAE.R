@@ -1,4 +1,4 @@
-#' The Mean Absolute Error
+#' Mean Absolute Error
 #'
 #' A somewhat naive criterion that is sometimes used consists of simply omitting all censored cases from the data set.
 #' For survival analysis problems, the mean absolute error (MAE) can be defined as an average of the differences between the predicted time values and the actual observation time values.
@@ -9,7 +9,7 @@
 #' @param object object of class \code{Surv} created by Surv function.
 #' @param pre_time a vector of predicted values of survival time of each observation.
 #'
-#' @return the value of the Mean Absolute Error between the survival time and the predicted result.
+#' @return the value of Mean Absolute Error
 #'
 #' @author Hanpu Zhou \email{zhouhanpu@csu.edu.cn}
 #' @references
@@ -32,6 +32,9 @@ MAE <- function(object, pre_time) {
 
   time <- object[, 1]
   status <- object[, 2]
+  if (missing(time) | missing(status) | missing(pre_time)) {
+    stop("Input value is missing")
+  }
 
   if (length(time) != length(status)) {
     stop("The lengths of time and status are not equal")

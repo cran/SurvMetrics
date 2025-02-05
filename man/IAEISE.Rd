@@ -2,25 +2,20 @@
 % Please edit documentation in R/IAEISE.R
 \name{IAEISE}
 \alias{IAEISE}
-\title{The Integrate Absolute Error and The Integrate Square Error}
+\title{IAEISE}
 \usage{
 IAEISE(object, sp_matrix, IRange = c(-2, -1))
 }
 \arguments{
-\item{object}{object of class \code{Surv} created by Surv function
-or a fitted survival model, including the survival model
-fitted by \code{coxph}, \code{survreg}, and \code{rfsrc}.}
+\item{object}{object of class \code{Surv} on the testing set created by Surv function.}
 
-\item{sp_matrix}{a matrix or data.frame of predicted values of survival probabilities for the testing set.
-rows denote different samples, columns denote different time points,
-and the values in row i and column j of the matrix denote the predicted survival probability
-of the ith sample at the time point corresponding to the jth column.}
+\item{sp_matrix}{a matrix of predicted values of survival probabilities for the testing set.}
 
 \item{IRange}{a vector contains all discrete time points corresponding to the predicted probability in sp_matrix.
 Or the scale you want to get the IAE and ISE;  .}
 }
 \value{
-Estimates of the Integrate Absolute Error and the Integrate Square Error of the predicted values of survival probabilities.
+Estimates of the IAE and ISE
 }
 \description{
 Two ways of the continuous-time approach to continuous-time identification based on least-squares and least-absolute errors are proposed.

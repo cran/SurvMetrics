@@ -1,4 +1,4 @@
-#' Survival Data Generation Method 2
+#' SDGM2
 #'
 #' Survival data generation method. The dataset represents mild violations of the proportional hazards assumption.
 #'

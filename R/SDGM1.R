@@ -1,4 +1,4 @@
-#' Survival Data Generation Method 1
+#' SDGM1
 #'
 #' Survival data generation method. An example of the proportional hazards model where in the Cox model is expected to perform best.
 #'

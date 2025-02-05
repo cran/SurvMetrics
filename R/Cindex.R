@@ -1,4 +1,4 @@
-#' The Concordance Index for Right-Censored Survival Time Data
+#' Concordance index for right censored survival time data
 #'
 #' Concordance index is a rank correlation measures between a variable X and a possibly
 #' censored variable Y, with event/censoring indicator. In survival analysis, a pair of patients is called concordant if the risk of
@@ -16,22 +16,11 @@
 #' functions \code{rcorr.cens} and \code{rcorrcens} from the \code{Hmisc}
 #' package (see examples).
 #'
-#' @param object object of class \code{Surv} created by Surv function
-#' or a fitted survival model, including the survival model
-#' fitted by \code{coxph}, \code{survreg}, and \code{rfsrc}.
-#' @param predicted
-#' If the input of the parameter \code{object} is a fitted survival model,
-#' this parameter should be a survival dataset on which you want to caculate the C-index of the fitted model.
-#' Or with an object of class \code{Surv} as the parameter \code{object},
-#' it should be a vector containing the predicted survival time or probability of each observation.
+#' @param object object of class \code{Surv} created by Surv function.
+#' @param predicted a vector containing the predicted survival time or probability of each observation.
 #' @param t_star the timepoint at which the C-index you want to calculate.
-#' If the input of the parameter \code{object} is a fitted survival model, the timepoint is necessary to be specified
-#' at which the survival probability is predicted,
-#' and this function will calculate the C-index between the survival time and the predicted result at that moment.
-#' If the input object is a survival object, this parameter can be ignored
-#' and the value of this parameter will not have any effect on the result of this fuction.
 #'
-#' @return Estimates of the C-index between the survival time and the predicted result.
+#' @return Estimates of the C-index.
 #' @author Hanpu Zhou \email{zhouhanpu@csu.edu.cn}
 #' @references
 #'
@@ -64,9 +53,6 @@
 #' Cindex(Surv(time, status), predicted)
 #'
 #' @importFrom survival Surv
-#' @importFrom pec predictSurvProb
-#' @importFrom randomForestSRC predict.rfsrc
-#' @importFrom stats median
 #'
 #' @export
 Cindex <- function(object, predicted, t_star = -1) {
@@ -83,8 +69,9 @@ Cindex <- function(object, predicted, t_star = -1) {
       t_star0 <- median(distime)
     } # the fixed time point
 
+    #    mat_coxph <- predictSurvProb(obj, test_data, distime) #get the survival probability matrix
     vec_coxph <-
-      predictSurvProb(obj, test_data, t_star0) # get the survival probability vector
+      pec::predictSurvProb(obj, test_data, t_star0) # get the survival probability vector
     object_coxph <- Surv(test_data$time, test_data$status)
 
     object <- object_coxph
@@ -131,7 +118,7 @@ Cindex <- function(object, predicted, t_star = -1) {
       t_star0 <- median(distime)
     } # the fixed time point
 
-    predicted <- predictSurvProb2survreg(obj, test_data, t_star0)
+    predicted <- predictSurvProb.survreg(obj, test_data, t_star0)
 
     object <- Surv(test_data$time, test_data$status)
   }
@@ -145,6 +132,10 @@ Cindex <- function(object, predicted, t_star = -1) {
 
   if (length(time) != length(predicted)) {
     stop("The lengths of time and predicted are not equal")
+  }
+
+  if (missing(time) | missing(status) | missing(predicted)) {
+    stop("Input value is missing")
   }
 
   if (any(is.na(time) | is.na(status) | is.na(predicted))) {

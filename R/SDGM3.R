@@ -1,4 +1,4 @@
-#' Survival Data Generation Method 3
+#' SDGM3
 #'
 #' Survival data generation method. The proportional hazards assumption is strongly violated in this dataset.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/MAE.R
 \name{MAE}
 \alias{MAE}
-\title{The Mean Absolute Error}
+\title{Mean Absolute Error}
 \usage{
 MAE(object, pre_time)
 }
@@ -12,7 +12,7 @@ MAE(object, pre_time)
 \item{pre_time}{a vector of predicted values of survival time of each observation.}
 }
 \value{
-the value of the Mean Absolute Error between the survival time and the predicted result.
+the value of Mean Absolute Error
 }
 \description{
 A somewhat naive criterion that is sometimes used consists of simply omitting all censored cases from the data set.

@@ -15,7 +15,9 @@ test_that("IBS", {
   status <- test_data$status
 
   expect_type(IBS(Surv(time, status), sp_matrix), "double")
-  expect_equal(as.numeric(IBS(Surv(time, status), sp_matrix)), 0.177957)
+  expval=0.177957
+  names(expval)="IBS"
+  expect_equal(IBS(Surv(time, status), sp_matrix), expval)
 
   expect_error(
     IBS(Surv(time[-1], status), sp_matrix),
@@ -54,10 +56,16 @@ test_that("IBS", {
   # test coxph
   coxfit <- coxph(Surv(time, status) ~ ., data = train_data, x = TRUE)
   expect_type(IBS(coxfit, test_data), "double")
+  expval=0.177957
+  names(expval)="IBS"
+  expect_equal(IBS(coxfit, test_data), expval)
 
   # test RSF
   rsffit <- rfsrc(Surv(time, status) ~ ., data = train_data)
   expect_type(IBS(rsffit, test_data), "double")
+  expval=0.1760480
+  names(expval)="IBS"
+  expect_equal(IBS(rsffit, test_data), expval)
 
   # test survreg
   for (dist in c(

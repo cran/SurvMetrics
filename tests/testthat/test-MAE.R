@@ -5,7 +5,9 @@ test_that("MAE", {
   predicted <- c(2, 3, 3, 3, 4, 2, 4, 3)
 
   expect_type(MAE(Surv(time, status), predicted), "double")
-  expect_equal(as.numeric(MAE(Surv(time, status), predicted)), 1.2)
+  expval=1.2
+  names(expval)="MAE"
+  expect_equal(MAE(Surv(time, status), predicted), expval)
   expect_error(
     MAE(Surv(time[-1], status), predicted),
     "Time and status are different lengths"

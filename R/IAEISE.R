@@ -1,21 +1,16 @@
-#' The Integrate Absolute Error and The Integrate Square Error
+#' IAEISE
 #'
 #' Two ways of the continuous-time approach to continuous-time identification based on least-squares and least-absolute errors are proposed.
 #' Integrate Absolute Error and Integrate Square Error.To evaluate the performance of survival models methods
 #' Lower values of IAE or ISE indicate better performances.
 #'
 #' @aliases IAEISE
-#' @param object object of class \code{Surv} created by Surv function
-#' or a fitted survival model, including the survival model
-#' fitted by \code{coxph}, \code{survreg}, and \code{rfsrc}.
-#' @param sp_matrix a matrix or data.frame of predicted values of survival probabilities for the testing set.
-#' rows denote different samples, columns denote different time points,
-#' and the values in row i and column j of the matrix denote the predicted survival probability
-#' of the ith sample at the time point corresponding to the jth column.
+#' @param object object of class \code{Surv} on the testing set created by Surv function.
+#' @param sp_matrix a matrix of predicted values of survival probabilities for the testing set.
 #' @param IRange a vector contains all discrete time points corresponding to the predicted probability in sp_matrix.
 #' Or the scale you want to get the IAE and ISE;  .
 #'
-#' @return Estimates of the Integrate Absolute Error and the Integrate Square Error of the predicted values of survival probabilities.
+#' @return Estimates of the IAE and ISE
 #' @author Hanpu Zhou \email{zhouhanpu@csu.edu.cn}
 #' @references
 #' Marron, J. S. , &  Wand, M. P. . (1992). Exact mean integrated squared error. Annals of Statistics, 20(2), 712-736.
@@ -48,8 +43,6 @@
 #'
 #' @importFrom survival Surv
 #' @importFrom survival survfit
-#' @importFrom pec predictSurvProb
-#' @importFrom randomForestSRC predict.rfsrc
 #'
 #' @export
 
@@ -63,7 +56,7 @@ IAEISE <- function(object, sp_matrix, IRange = c(-2, -1)) {
     distime <- sort(unique(as.vector(obj$y[obj$y[, 2] == 1])))
 
     mat_coxph <-
-      predictSurvProb(obj, test_data, distime) # get the survival probability matrix
+      pec::predictSurvProb(obj, test_data, distime) # get the survival probability matrix
     object_coxph <- Surv(test_data$time, test_data$status)
 
     object <- object_coxph
@@ -99,7 +92,7 @@ IAEISE <- function(object, sp_matrix, IRange = c(-2, -1)) {
     distime <- sort(unique(as.vector(obj$y[obj$y[, 2] == 1])))
 
     object <- Surv(test_data$time, test_data$status)
-    sp_matrix <- predictSurvProb2survreg(obj, test_data, distime)
+    sp_matrix <- predictSurvProb.survreg(obj, test_data, distime)
     if (max(IRange) <= 0) {
       IRange <- range(object[, 1])
     } # the fixed time point
@@ -113,13 +106,21 @@ IAEISE <- function(object, sp_matrix, IRange = c(-2, -1)) {
     stop("The class of the IRange must be numeric! or use the default setting")
   }
 
-  # default time range for IAEISE()
-  if (max(IRange) <= 0) {
-    IRange <- range(object[, 1])
+  #default time range for IAEISE()
+  if(max(IRange) <= 0 ){
+    IRange <-  range(object[, 1])
   }
 
   if (!inherits(object, "Surv")) {
     stop("object is not of class Surv")
+  }
+
+  if (missing(object)) {
+    stop("The survival object of the testing set is missing")
+  }
+
+  if (missing(sp_matrix)) {
+    stop("The prediction of the survival probability matrix is missing")
   }
 
   if (any(is.na(object))) {

@@ -1,4 +1,4 @@
-#' The Brier Score
+#' Brier
 #'
 #' The Brier Score was proposed by Glenn W. Brier in 1950 which is a proper score function that measures the accuracy of probabilistic predictions, usually used to measure the accuracy of a model fit for survival data.
 #' Brier can calculate the value of Brier Score at any timepoint,
@@ -13,24 +13,12 @@
 #' The Brier Score is a strictly proper score (Gneiting and Raftery, 2007), which means that it takes its minimal value only when the predicted probabilities match the empirical probabilities.
 #'
 #' Judging from the sparse empirical evidence, predictions of duration of survival tend to be rather inaccurate. More precision is achieved by using patient-specific survival probabilities and the Brier score as predictions to discriminate future survivors from failures.
-#' @param object object of class \code{Surv} created by Surv function
-#' or a fitted survival model, including the survival model
-#' fitted by \code{coxph}, \code{survreg}, and \code{rfsrc}.
-#' @param pre_sp
-#' If the input of the parameter \code{object} is a fitted survival model,
-#' this parameter should be a survival dataset on which
-#' you want to caculate the Brier Score of the fitted model.
-#' Or with an object of class \code{Surv} as the parameter \code{object},
-#' it should be a vector of predicted values of survival probabilities
-#' of each observation in testing set at time t_star.
-#' @param t_star the timepoint at which the Brier Score you want to calculate.
-#' If the input of the parameter \code{object} is a fitted survival model, the timepoint is necessary to be specified
-#' at which the survival probability is predicted,
-#' and this function will calculate the Brier Score at that moment.
-#' If the input object is a survival object, this parameter can be ignored
-#' and the value of this parameter will not have any effect on the result of this fuction.
+#' @param object object of class \code{Surv} in the testing set created by Surv function.
+#' @param pre_sp a vector of predicted values of survival probabilities of each observation in testing set at time t_star.
+#' @param t_star the timepoint at which the Brier score you want to calculate.
 #'
-#' @return the Brier Score at time t_star between the true classes and the predicted probabilities.
+#'
+#' @return the Brier Score at time t_star
 #'
 #' @author Hanpu Zhou \email{zhouhanpu@csu.edu.cn}
 #' @references
@@ -48,11 +36,9 @@
 #' Brier(Surv(time, status), pre_sp, t_star)
 #'
 #' @importFrom survival Surv
-#' @importFrom pec predictSurvProb
-#' @importFrom randomForestSRC predict.rfsrc
-#' @importFrom stats median
 #'
 #' @export
+#'
 Brier <- function(object, pre_sp, t_star = -1) {
   # case1、coxph AND testing set
   if (inherits(object, "coxph")) {
@@ -67,8 +53,9 @@ Brier <- function(object, pre_sp, t_star = -1) {
       t_star0 <- median(distime)
     } # the fixed time point
 
+    #    mat_coxph <- pec::predictSurvProb(obj, test_data, distime) #get the survival probability matrix
     vec_coxph <-
-      predictSurvProb(obj, test_data, t_star0) # get the survival probability vector
+      pec::predictSurvProb(obj, test_data, t_star0) # get the survival probability vector
     object_coxph <- Surv(test_data$time, test_data$status)
 
     object <- object_coxph
@@ -116,7 +103,7 @@ Brier <- function(object, pre_sp, t_star = -1) {
       t_star0 <- median(distime)
     } # the fixed time point
 
-    pre_sp <- predictSurvProb2survreg(obj, test_data, t_star0)
+    pre_sp <- predictSurvProb.survreg(obj, test_data, t_star0)
     object <- Surv(test_data$time, test_data$status)
     t_star <- t_star0
   }
@@ -125,9 +112,9 @@ Brier <- function(object, pre_sp, t_star = -1) {
     stop("Cannot calculate Brier Score at NA")
   }
 
-  # default time point for Brier(t_star)
-  if (t_star <= 0) {
-    t_star <- median(object[, 1][object[, 2] == 1])
+  #default time point for Brier(t_star)
+  if(t_star <= 0 ){
+    t_star <- median(object[,1][object[,2] == 1])
   }
 
   if (length(t_star) != 1) {
@@ -137,6 +124,14 @@ Brier <- function(object, pre_sp, t_star = -1) {
   if (!inherits(object, "Surv")) {
     stop("object is not of class Surv")
   }
+
+  if (missing(object) | missing(pre_sp)) {
+    stop("The survival object or the prediction is missing")
+  }
+
+  # if (missing(t_star)) {
+  #   stop("The t_star is missing with no default. when input Surv object, you should give positive t_star")
+  # }
 
   if (any(is.na(object))) {
     stop("The input vector cannot have NA")
@@ -170,7 +165,7 @@ Brier <- function(object, pre_sp, t_star = -1) {
       if (is.na(Gti)) {
         next
       }
-      sum_before_t <- sum_before_t + 1 / Gti * (pre_sp[i]) ^ 2 # IPCW
+      sum_before_t <- sum_before_t + 1 / Gti * (pre_sp[i])^2 # IPCW
       next
     }
     # survival time is greater than t_star
@@ -178,9 +173,8 @@ Brier <- function(object, pre_sp, t_star = -1) {
       if (is.na(Gtstar)) {
         next
       }
-      sum_after_t <-
-        sum_after_t + 1 / Gt(Surv(time, status), t_star) * (1 -
-                                                              pre_sp[i]) ^ 2
+      sum_after_t <- sum_after_t + 1 / Gt(Surv(time, status), t_star) * (1 -
+        pre_sp[i])^2
     } # IPCW
   }
 

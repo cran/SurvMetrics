@@ -2,7 +2,7 @@
 % Please edit documentation in R/SDGM2.R
 \name{SDGM2}
 \alias{SDGM2}
-\title{Survival Data Generation Method 2}
+\title{SDGM2}
 \usage{
 SDGM2(N = 200, p = 15, u_max = 4)
 }

@@ -2,26 +2,20 @@
 % Please edit documentation in R/IBS.R
 \name{IBS}
 \alias{IBS}
-\title{The Integration of the Brier Score}
+\title{IBS}
 \usage{
 IBS(object, sp_matrix, IBSrange = c(-2, -1))
 }
 \arguments{
-\item{object}{object of class \code{Surv} created by Surv function
-or a fitted survival model, including the survival model
-fitted by \code{coxph}, \code{survreg}, and \code{rfsrc}.}
+\item{object}{object of class \code{Surv} in the testing set created by Surv function.}
 
-\item{sp_matrix}{a matrix or data.frame of predicted values of survival probabilities for the testing set.
-Rows denote different samples, columns denote different time points,
-and the values in entry (i,j) of the matrix denote the predicted survival probability
-of the ith sample at the time point corresponding to the jth column.}
+\item{sp_matrix}{a matrix or data.frame of predicted values of survival probabilities for the testing set.}
 
 \item{IBSrange}{a vector contains all discrete time points corresponding to the predicted probability in sp_matrix.
 Or the scale you want to get the IBS; and if it is a single point the return value will be the Brier Score at the timepoint.}
 }
 \value{
-The integration of the Brier score of the predicted values of survival probabilities
-on the discrete time points or the time scale of interest to users.
+The integration of brierscore
 }
 \description{
 IBS is  an integrated version of the Brier which is used to calculate the integration of the Brier Score.

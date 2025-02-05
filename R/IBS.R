@@ -1,4 +1,4 @@
-#' The Integration of the Brier Score
+#' IBS
 #'
 #' IBS is  an integrated version of the Brier which is used to calculate the integration of the Brier Score.
 #' The Brier Score is the mean square difference between the true classes and the predicted probabilities.
@@ -12,18 +12,12 @@
 #' We also prefer measures with integrated loss functions since they will reflect inaccuracy over an interval rather than just at one point in time.
 #' In addition, the corresponding empirical measures are likely to have lower dispersion, because censored observations contribute their estimated event-free probabilities to the integrand until the censoring occurs.
 #'
-#' @param object object of class \code{Surv} created by Surv function
-#' or a fitted survival model, including the survival model
-#' fitted by \code{coxph}, \code{survreg}, and \code{rfsrc}.
+#' @param object object of class \code{Surv} in the testing set created by Surv function.
 #' @param sp_matrix a matrix or data.frame of predicted values of survival probabilities for the testing set.
-#' Rows denote different samples, columns denote different time points,
-#' and the values in entry (i,j) of the matrix denote the predicted survival probability
-#' of the ith sample at the time point corresponding to the jth column.
 #' @param IBSrange a vector contains all discrete time points corresponding to the predicted probability in sp_matrix.
 #' Or the scale you want to get the IBS; and if it is a single point the return value will be the Brier Score at the timepoint.
 #'
-#' @return The integration of the Brier score of the predicted values of survival probabilities
-#' on the discrete time points or the time scale of interest to users.
+#' @return The integration of brierscore
 #'
 #' @author Hanpu Zhou \email{zhouhanpu@csu.edu.cn}
 #' @references
@@ -57,8 +51,7 @@
 #' IBS(object, sp_matrix, c(18:100))
 #'
 #' @importFrom survival Surv
-#' @importFrom pec predictSurvProb
-#' @importFrom randomForestSRC predict.rfsrc
+#'
 #'
 #' @export
 IBS <- function(object, sp_matrix, IBSrange = c(-2, -1)) {
@@ -71,7 +64,7 @@ IBS <- function(object, sp_matrix, IBSrange = c(-2, -1)) {
     distime <- sort(unique(as.vector(obj$y[obj$y[, 2] == 1])))
 
     mat_coxph <-
-      predictSurvProb(obj, test_data, distime) # get the survival probability matrix
+      pec::predictSurvProb(obj, test_data, distime) # get the survival probability matrix
     object_coxph <- Surv(test_data$time, test_data$status)
 
     object <- object_coxph
@@ -108,7 +101,7 @@ IBS <- function(object, sp_matrix, IBSrange = c(-2, -1)) {
     distime <- sort(unique(as.vector(obj$y[obj$y[, 2] == 1])))
 
     object <- Surv(test_data$time, test_data$status)
-    sp_matrix <- predictSurvProb2survreg(obj, test_data, distime)
+    sp_matrix <- predictSurvProb.survreg(obj, test_data, distime)
     if (max(IBSrange) <= 0) {
       IBSrange <- range(object[, 1])
     } # the fixed time point
@@ -122,13 +115,21 @@ IBS <- function(object, sp_matrix, IBSrange = c(-2, -1)) {
     stop("Cannot calculate IBS in the interval containing NA")
   }
 
-  # default time range for IBS()
-  if (max(IBSrange) <= 0) {
-    IBSrange <- range(object[, 1])
+  #default time range for IBS()
+  if(max(IBSrange) <= 0){
+    IBSrange = range(object[, 1])
   }
 
   if (!inherits(object, "Surv")) {
     stop("object is not of class Surv")
+  }
+
+  if (missing(object)) {
+    stop("The survival object of the testing set is missing")
+  }
+
+  if (missing(sp_matrix)) {
+    stop("The prediction of the survival probability matrix is missing")
   }
 
   if (any(is.na(object))) {

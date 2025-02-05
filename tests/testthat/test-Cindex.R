@@ -5,20 +5,42 @@ test_that("Cindex", {
   status <- c(0, 1, 1, 0, 1, 1, 0, 1)
   predicted <- c(2, 3, 3, 3, 4, 2, 4, 3)
   expect_type(Cindex(Surv(time, status), predicted), "double")
-  expect_equal(as.numeric(Cindex(Surv(time, status), predicted)), 0.642857)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 2), c(1, 1)), c(0.5, 0.6))), 1)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 2), c(1, 1)), c(0.6, 0.5))), 0)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 2), c(1, 1)), c(0.5, 0.5))), 0.5)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 1), c(1, 1)), c(0.5, 0.5))), 1)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 1), c(1, 1)), c(0.5, 0.6))), 0.5)
+  expval=0.642857
+  names(expval)="C index"
+  expect_equal(Cindex(Surv(time, status), predicted), expval)
+  expval=1; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,2), c(1,1)), c(0.5, 0.6)), expval)
 
-  expect_equal(as.numeric(Cindex(Surv(c(1, 1), c(1, 0)), c(0.5, 0.5))), 0.5)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 1), c(1, 0)), c(0.5, 0.6))), 1)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 1), c(1, 0)), c(0.6, 0.5))), 0.5)
+  expval=0; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,2), c(1,1)), c(0.6, 0.5)), expval)
 
-  expect_equal(as.numeric(Cindex(Surv(c(1, 2), c(1, 0)), c(0.5, 0.6))), 1)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 2), c(1, 0)), c(0.5, 0.5))), 0.5)
-  expect_equal(as.numeric(Cindex(Surv(c(1, 2), c(1, 0)), c(0.6, 0.5))), 0)
+  expval=0.5; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,2), c(1,1)), c(0.5, 0.5)), expval)
+
+  expval=1; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,1), c(1,1)), c(0.5, 0.5)), expval)
+
+  expval=0.5; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,1), c(1,1)), c(0.5, 0.6)), expval)
+
+  expval=0.5; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,1), c(1,0)), c(0.5, 0.5)), expval)
+
+  expval=1; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,1), c(1,0)), c(0.5, 0.6)), expval)
+
+  expval=0.5; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,1), c(1,0)), c(0.6, 0.5)),expval)
+
+  expval=1; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,2), c(1,0)), c(0.5, 0.6)), expval)
+
+  expval=0.5; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,2), c(1,0)), c(0.5, 0.5)), expval)
+
+  expval=0; names(expval)="C index"
+  expect_equal(Cindex(Surv(c(1,2), c(1,0)), c(0.6, 0.5)), expval)
+
 
 
   expect_error(
@@ -46,10 +68,14 @@ test_that("Cindex", {
   # test coxph
   coxfit <- coxph(Surv(time, status) ~ ., data = train_data, x = TRUE)
   expect_type(Cindex(coxfit, test_data), "double")
+  expval=0.829897; names(expval)="C index"
+  expect_equal(Cindex(coxfit, test_data), expval)
 
   # test RSF
   rsffit <- rfsrc(Surv(time, status) ~ ., data = train_data)
   expect_type(Cindex(rsffit, test_data), "double")
+  expval=0.765464; names(expval)="C index"
+  expect_equal(Cindex(rsffit, test_data), expval)
 
   # test survreg
   for (dist in c(

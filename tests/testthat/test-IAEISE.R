@@ -15,7 +15,9 @@ test_that("IAEISE", {
   status <- test_data$status
 
   expect_type(IAEISE(Surv(time, status), sp_matrix), "double")
-  expect_equal(as.numeric(IAEISE(Surv(time, status), sp_matrix)), c(132.0101, 44.3022))
+  expval=c(132.0101, 44.3022)
+  names(expval)=c('IAE', 'ISE')
+  expect_equal(IAEISE(Surv(time, status), sp_matrix), expval)
 
   expect_error(
     IAEISE(Surv(time[-1], status), sp_matrix),
