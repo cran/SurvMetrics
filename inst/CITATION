@@ -1,0 +1,22 @@
+bibentry(
+  bibtype = "Article",
+  title   = "SurvMetrics: An R package for Predictive Evaluation Metrics in Survival Analysis",
+  author  = c(
+    person("Hanpu",  "Zhou"),
+    person("Hong",   "Wang"),
+    person("Sizheng","Wang"),
+    person("Yi",     "Zou")
+  ),
+  journal = "The R Journal",
+  year    = "2023",
+  volume  = "14",
+  number  = "4",
+  pages   = "252-263",
+  doi     = "10.32614/rj-2023-009",
+  textVersion = paste(
+    "Hanpu Zhou, Hong Wang, Sizheng Wang, Yi Zou (2023).",
+    "SurvMetrics: An R package for Predictive Evaluation Metrics in Survival Analysis.",
+    "The R Journal, 14(4), 252-263.",
+    "https://doi.org/10.32614/rj-2023-009"
+  )
+)

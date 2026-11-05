@@ -20,6 +20,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Hong Wang \email{wh@csu.edu.cn}
   \item Hanpu Zhou \email{974637739@qq.com}
   \item Xuewei Cheng \email{xwcheng@hunnu.edu.cn}
   \item Sizheng Wang \email{964555106@qq.com}

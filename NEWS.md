@@ -1,3 +1,6 @@
+# SurvMetrics 0.5.2
+Fixed randomForestSRC issue
+
 # SurvMetrics 0.1.0
 
 First release targeting CRAN

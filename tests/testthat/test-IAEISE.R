@@ -2,6 +2,7 @@ test_that("IAEISE", {
   # case 1 Surv object
   library(survival)
   library(randomForestSRC)
+  rfsrc.RNGversion("3.2.3")
   library(pec)
   set.seed(1234)
   mydata <- kidney[, -1]

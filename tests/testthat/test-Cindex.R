@@ -59,6 +59,7 @@ test_that("Cindex", {
 
   # case2 fit object
   library(randomForestSRC)
+  rfsrc.RNGversion("3.2.3")
   library(pec)
   set.seed(1234)
   mydata <- kidney[, -1]
